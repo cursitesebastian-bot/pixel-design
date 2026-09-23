@@ -1,0 +1,1261 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SUJAK GG — Pixel Maximalist Portfolio</title>
+    <meta
+      name="description"
+      content="SUJAK GG — a pixel-art maximalist portfolio for a full-stack web developer."
+    />
+
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --bg: #fff4d6;
+        --paper: #fffaf0;
+        --ink: #17131b;
+        --muted: #5b5360;
+        --pink: #f17adc;
+        --cyan: #19d9d0;
+        --yellow: #ffd43b;
+        --purple: #7c4dff;
+        --orange: #ff7138;
+        --green: #7be34a;
+        --blue: #4d8dff;
+        --red: #ff3b5f;
+        --line: #17131b;
+        --pixel: 4px;
+        --font-display: "Space Grotesk", sans-serif;
+        --font-body: "Inter", sans-serif;
+        --font-mono: "JetBrains Mono", monospace;
+        --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        background:
+          radial-gradient(
+            circle at 10% 10%,
+            rgba(255, 79, 163, 0.13) 0 2px,
+            transparent 3px
+          ),
+          radial-gradient(
+            circle at 80% 25%,
+            rgba(25, 217, 208, 0.14) 0 2px,
+            transparent 3px
+          ),
+          var(--bg);
+        background-size:
+          22px 22px,
+          30px 30px,
+          auto;
+        color: var(--ink);
+        font-family: var(--font-body);
+        line-height: 1.5;
+        overflow-x: hidden;
+        image-rendering: pixelated;
+      }
+      ::selection {
+        background: var(--ink);
+        color: var(--yellow);
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      section {
+        position: relative;
+        padding: min(12vh, 120px) min(6vw, 72px);
+        max-width: 1280px;
+        margin: 0 auto;
+      }
+      h1,
+      h2,
+      h3 {
+        font-family: var(--font-display);
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        line-height: 0.95;
+      }
+      .eyebrow {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        margin-bottom: 20px;
+        padding: 7px 10px;
+        background: var(--ink);
+        color: var(--yellow);
+        box-shadow: 4px 4px 0 var(--pink);
+      }
+      .eyebrow::before {
+        content: "◆";
+        color: var(--cyan);
+        font-size: 8px;
+      }
+
+      /* pixel reveal */
+      .reveal {
+        opacity: 0;
+        transform: translateY(22px);
+        transition:
+          opacity 0.65s var(--ease),
+          transform 0.65s var(--ease);
+      }
+      .reveal.in-view {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .stagger .reveal:nth-child(1) {
+        transition-delay: 0s;
+      }
+      .stagger .reveal:nth-child(2) {
+        transition-delay: 0.08s;
+      }
+      .stagger .reveal:nth-child(3) {
+        transition-delay: 0.16s;
+      }
+      .stagger .reveal:nth-child(4) {
+        transition-delay: 0.24s;
+      }
+      .stagger .reveal:nth-child(5) {
+        transition-delay: 0.32s;
+      }
+      .stagger .reveal:nth-child(6) {
+        transition-delay: 0.4s;
+      }
+
+      /* fixed progress */
+      .tracker {
+        position: fixed;
+        right: 22px;
+        top: 50%;
+        transform: translateY(-50%);
+        height: 38vh;
+        width: 16px;
+        z-index: 50;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .tracker-line {
+        position: relative;
+        width: 6px;
+        height: 100%;
+        background: var(--ink);
+        border: 2px solid var(--ink);
+      }
+      .tracker-fill {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 0%;
+        background: var(--pink);
+        box-shadow: 0 0 0 2px var(--yellow);
+        transition: height 0.1s linear;
+      }
+      .tracker-point {
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%, 50%);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .tracker-point .dot {
+        width: 12px;
+        height: 12px;
+        background: var(--yellow);
+        border: 3px solid var(--ink);
+        transition: all 0.3s var(--ease);
+      }
+      .tracker-point.active .dot {
+        background: var(--cyan);
+        transform: scale(1.35);
+        box-shadow: 4px 4px 0 var(--pink);
+      }
+      .tracker-point .label {
+        position: absolute;
+        right: 20px;
+        font-family: var(--font-mono);
+        font-size: 9px;
+        font-weight: 700;
+        white-space: nowrap;
+        background: var(--ink);
+        color: var(--yellow);
+        padding: 4px 6px;
+        opacity: 0;
+        transform: translateX(6px);
+        transition: all 0.3s var(--ease);
+      }
+      .tracker-point.active .label {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      .top-progress {
+        display: none;
+      }
+      @media (max-width: 900px) {
+        .tracker {
+          display: none;
+        }
+        .top-progress {
+          display: block;
+          position: fixed;
+          top: 0;
+          left: 0;
+          height: 6px;
+          width: 100%;
+          background: var(--ink);
+          z-index: 60;
+        }
+        .top-progress-fill {
+          height: 100%;
+          width: 0%;
+          background: linear-gradient(
+            90deg,
+            var(--pink),
+            var(--purple),
+            var(--cyan),
+            var(--yellow)
+          );
+        }
+      }
+
+      /* header */
+      header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 40;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 18px min(6vw, 72px);
+        mix-blend-mode: normal;
+      }
+      .logo {
+        font-family: var(--font-mono);
+        font-size: 14px;
+        font-weight: 800;
+        background: var(--yellow);
+        border: 3px solid var(--ink);
+        padding: 7px 9px;
+        box-shadow: 5px 5px 0 var(--pink);
+      }
+      nav {
+        display: flex;
+        gap: 8px;
+        background: var(--paper);
+        border: 3px solid var(--ink);
+        padding: 5px;
+        box-shadow: 5px 5px 0 var(--purple);
+      }
+      nav a {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        padding: 8px 10px;
+        color: var(--ink);
+      }
+      nav a:hover {
+        background: var(--cyan);
+        box-shadow: 3px 3px 0 var(--ink);
+      }
+      @media (max-width: 640px) {
+        nav a span {
+          display: none;
+        }
+        nav {
+          gap: 0;
+        }
+        nav a {
+          padding: 7px;
+        }
+      }
+
+      /* hero */
+      .hero {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding-top: 110px;
+        overflow: hidden;
+      }
+      .hero::before {
+        content: "";
+        position: absolute;
+        right: -90px;
+        top: 120px;
+        width: 230px;
+        height: 230px;
+        background:
+          linear-gradient(
+            90deg,
+            transparent 45%,
+            var(--ink) 45% 55%,
+            transparent 55%
+          ),
+          linear-gradient(
+            0deg,
+            transparent 45%,
+            var(--ink) 45% 55%,
+            transparent 55%
+          );
+        background-size: 34px 34px;
+        opacity: 0.12;
+        transform: rotate(8deg);
+        z-index: -1;
+      }
+      .hero::after {
+        content: "PIXEL / MAX / 01";
+        position: absolute;
+        right: 7%;
+        bottom: 14%;
+        font-family: var(--font-mono);
+        font-weight: 800;
+        font-size: 11px;
+        background: var(--pink);
+        border: 3px solid var(--ink);
+        padding: 8px;
+        transform: rotate(-4deg);
+        box-shadow: 5px 5px 0 var(--ink);
+      }
+      .contour-bg {
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        opacity: 0.55;
+        pointer-events: none;
+      }
+      .contour-bg path {
+        fill: none;
+        stroke: var(--ink);
+        stroke-width: 3;
+        stroke-dasharray: 3 9;
+      }
+      .glow {
+        position: absolute;
+        width: 360px;
+        height: 360px;
+        border-radius: 0;
+        background:
+          radial-gradient(circle, var(--yellow) 0 5%, transparent 6%),
+          radial-gradient(circle, var(--pink) 0 3%, transparent 4%);
+        background-size:
+          26px 26px,
+          18px 18px;
+        opacity: 0.28;
+        pointer-events: none;
+        z-index: -1;
+        transition: transform 0.3s ease-out;
+      }
+      .hero h1 {
+        font-size: clamp(54px, 9vw, 124px);
+        max-width: 10ch;
+        text-transform: uppercase;
+        text-shadow:
+          7px 7px 0 var(--yellow),
+          12px 12px 0 var(--pink);
+      }
+      .hero h1 .line {
+        display: block;
+        overflow: hidden;
+        padding: 5px 0 12px;
+      }
+      .hero h1 .line span {
+        display: block;
+        transform: translateY(110%);
+        transition: transform 1s var(--ease);
+      }
+      .hero.loaded h1 .line:nth-child(1) span {
+        transition-delay: 0.15s;
+        transform: translateY(0);
+      }
+      .hero.loaded h1 .line:nth-child(2) span {
+        transition-delay: 0.28s;
+        transform: translateY(0);
+      }
+      .hero.loaded h1 .line:nth-child(3) span {
+        transition-delay: 0.41s;
+        transform: translateY(0);
+      }
+      .hero .accent {
+        color: var(--pink);
+        font-style: normal;
+        -webkit-text-stroke: 2px var(--ink);
+        text-shadow: 4px 4px 0 var(--cyan);
+      }
+      .hero p.sub {
+        margin-top: 28px;
+        max-width: 52ch;
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--ink);
+        background: var(--paper);
+        border: 3px solid var(--ink);
+        padding: 15px 17px;
+        box-shadow: 6px 6px 0 var(--cyan);
+        opacity: 0;
+        transform: translateY(14px);
+        transition: all 0.8s var(--ease) 0.6s;
+      }
+      .hero.loaded p.sub {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .cta-row {
+        margin-top: 38px;
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        opacity: 0;
+        transform: translateY(14px);
+        transition: all 0.8s var(--ease) 0.75s;
+      }
+      .hero.loaded .cta-row {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .btn {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+        padding: 14px 20px;
+        border: 3px solid var(--ink);
+        display: inline-block;
+        transition:
+          transform 0.2s var(--ease),
+          background 0.2s;
+        box-shadow: 5px 5px 0 var(--ink);
+      }
+      .btn-primary {
+        background: var(--pink);
+        color: var(--ink);
+      }
+      .btn-primary:hover {
+        background: var(--yellow);
+      }
+      .btn-ghost {
+        background: var(--paper);
+      }
+      .btn-ghost:hover {
+        background: var(--cyan);
+      }
+      .scroll-cue {
+        position: absolute;
+        bottom: 35px;
+        left: min(6vw, 72px);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        font-weight: 800;
+        opacity: 0;
+        animation: fadeIn 1s var(--ease) 1.4s forwards;
+      }
+      .scroll-cue .stem {
+        width: 10px;
+        height: 34px;
+        background: repeating-linear-gradient(
+          to bottom,
+          var(--ink) 0 5px,
+          transparent 5px 9px
+        );
+        position: relative;
+      }
+      @keyframes fadeIn {
+        to {
+          opacity: 1;
+        }
+      }
+
+      /* section titles */
+      section h2 {
+        font-size: clamp(34px, 5vw, 60px);
+        max-width: 18ch;
+        text-transform: uppercase;
+        text-shadow: 4px 4px 0 var(--yellow);
+      }
+
+      /* stack */
+      .tier-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+        margin-top: 50px;
+        background: transparent;
+        border: 0;
+      }
+      @media (max-width: 800px) {
+        .tier-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      .tier {
+        background: var(--paper);
+        padding: 28px 25px;
+        border: 4px solid var(--ink);
+        box-shadow: 8px 8px 0 var(--ink);
+        position: relative;
+        overflow: hidden;
+      }
+      .tier::before {
+        content: "";
+        position: absolute;
+        right: -20px;
+        top: -20px;
+        width: 80px;
+        height: 80px;
+        background: var(--yellow);
+        border: 4px solid var(--ink);
+        transform: rotate(45deg);
+      }
+      .tier .tier-label {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        font-weight: 800;
+        text-transform: uppercase;
+        background: var(--ink);
+        color: var(--paper);
+        display: inline-block;
+        padding: 5px 7px;
+        margin-bottom: 10px;
+      }
+      .tier h3 {
+        font-size: 21px;
+        margin-bottom: 18px;
+      }
+      .tier ul {
+        list-style: none;
+      }
+      .tier li {
+        font-family: var(--font-mono);
+        font-size: 13px;
+        font-weight: 700;
+        padding: 10px 0;
+        border-top: 2px dashed var(--ink);
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        transition:
+          transform 0.2s,
+          color 0.2s;
+      }
+      .tier li::before {
+        content: "▣";
+        color: var(--pink);
+      }
+      .tier li:hover {
+        color: var(--purple);
+        transform: translateX(5px);
+      }
+      .tier.core {
+        border-color: var(--ink);
+        background: #fff0f7;
+      }
+      .tier.core::before {
+        background: var(--pink);
+      }
+      .tier.comfortable {
+        background: #efffff;
+      }
+      .tier.comfortable::before {
+        background: var(--cyan);
+      }
+      .tier.exploring {
+        background: #f5f0ff;
+      }
+      .tier.exploring::before {
+        background: var(--purple);
+      }
+
+      /* work */
+      .work-grid {
+        margin-top: 50px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+      }
+      @media (max-width: 760px) {
+        .work-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      .card {
+        background: var(--paper);
+        border: 4px solid var(--ink);
+        overflow: hidden;
+        transform-style: preserve-3d;
+        transition:
+          transform 0.3s var(--ease),
+          border-color 0.3s,
+          box-shadow 0.3s;
+        will-change: transform;
+        box-shadow: 8px 8px 0 var(--ink);
+      }
+      .card:hover {
+        border-color: var(--ink);
+        box-shadow: 12px 12px 0 var(--pink);
+      }
+      .card-art {
+        height: 210px;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: flex-end;
+        padding: 18px;
+        border-bottom: 4px solid var(--ink);
+      }
+      .card-art::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(var(--ink) 2px, transparent 2px),
+          linear-gradient(90deg, var(--ink) 2px, transparent 2px);
+        background-size: 22px 22px;
+        opacity: 0.18;
+      }
+      .card-art::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to top,
+          rgba(23, 19, 27, 0.55),
+          transparent 65%
+        );
+      }
+      .card-chrome {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 34px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        padding: 0 12px;
+        background: var(--paper);
+        border-bottom: 3px solid var(--ink);
+        z-index: 2;
+      }
+      .card-chrome i {
+        width: 10px;
+        height: 10px;
+        border: 2px solid var(--ink);
+        background: var(--pink);
+      }
+      .card-chrome i:nth-child(2) {
+        background: var(--yellow);
+      }
+      .card-chrome i:nth-child(3) {
+        background: var(--cyan);
+      }
+      .card-art .site-url {
+        position: relative;
+        z-index: 2;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 800;
+        background: var(--paper);
+        color: var(--ink);
+        border: 2px solid var(--ink);
+        padding: 5px 7px;
+      }
+      .art-thailand {
+        background: linear-gradient(
+          135deg,
+          var(--yellow),
+          var(--orange),
+          var(--pink)
+        );
+      }
+      .art-southasia {
+        background: linear-gradient(
+          135deg,
+          var(--purple),
+          var(--blue),
+          var(--cyan)
+        );
+      }
+      .art-sneaker {
+        background: linear-gradient(
+          135deg,
+          var(--red),
+          var(--orange),
+          var(--yellow)
+        );
+      }
+      .art-experiments {
+        background: linear-gradient(
+          135deg,
+          var(--ink),
+          var(--purple),
+          var(--pink)
+        );
+      }
+      .wave-pattern {
+        position: absolute;
+        inset: 0;
+        opacity: 0.7;
+      }
+      .card-body {
+        padding: 22px 22px 28px;
+      }
+      .card-body h3 {
+        font-size: 21px;
+        margin-bottom: 9px;
+      }
+      .card-body p {
+        font-size: 14px;
+        color: var(--muted);
+        line-height: 1.6;
+        margin-bottom: 16px;
+        font-weight: 500;
+      }
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+      }
+      .tag {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        font-weight: 800;
+        text-transform: uppercase;
+        padding: 6px 8px;
+        border: 2px solid var(--ink);
+        background: var(--yellow);
+        box-shadow: 2px 2px 0 var(--ink);
+      }
+      .tag:nth-child(2n) {
+        background: var(--cyan);
+      }
+      .tag:nth-child(3n) {
+        background: var(--pink);
+      }
+      .card-link {
+        margin-top: 18px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        background: var(--ink);
+        color: var(--yellow);
+        padding: 8px 10px;
+        border: 2px solid var(--ink);
+      }
+      .card-link:hover {
+        background: var(--pink);
+        color: var(--ink);
+      }
+      .card-link svg {
+        transition: transform 0.25s var(--ease);
+      }
+      .card-link:hover svg {
+        transform: translate(3px, -3px);
+      }
+
+      /* contact */
+      .contact {
+        padding-bottom: min(16vh, 160px);
+      }
+      .contact h2 {
+        font-size: clamp(40px, 7vw, 86px);
+        max-width: 12ch;
+        text-shadow:
+          6px 6px 0 var(--cyan),
+          11px 11px 0 var(--pink);
+      }
+      .contact p.sub {
+        margin-top: 22px;
+        color: var(--muted);
+        max-width: 52ch;
+        font-size: 16px;
+        font-weight: 600;
+        background: var(--paper);
+        border: 3px solid var(--ink);
+        padding: 14px 16px;
+        box-shadow: 6px 6px 0 var(--yellow);
+      }
+      .contact-links {
+        margin-top: 45px;
+        display: flex;
+        flex-direction: column;
+        border-top: 4px solid var(--ink);
+      }
+      .contact-links a {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 8px;
+        border-bottom: 3px solid var(--ink);
+        font-family: var(--font-display);
+        font-size: clamp(20px, 3vw, 30px);
+        font-weight: 800;
+        text-transform: uppercase;
+        transition:
+          padding-left 0.25s,
+          background 0.25s;
+      }
+      .contact-links a:hover {
+        padding-left: 20px;
+        background: var(--yellow);
+      }
+      .contact-links a span.tag2 {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        color: var(--muted);
+        letter-spacing: 0.08em;
+      }
+      footer {
+        padding: 25px min(6vw, 72px) 35px;
+        display: flex;
+        justify-content: space-between;
+        color: var(--ink);
+        font-family: var(--font-mono);
+        font-size: 10px;
+        font-weight: 700;
+        flex-wrap: wrap;
+        gap: 10px;
+        border-top: 4px solid var(--ink);
+        background: var(--pink);
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+          scroll-behavior: auto !important;
+        }
+        .hero h1 .line span {
+          transform: translateY(0) !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="top-progress">
+      <div class="top-progress-fill" id="topFill"></div>
+    </div>
+
+    <div class="tracker" id="tracker">
+      <div class="tracker-line">
+        <div class="tracker-fill" id="trackerFill"></div>
+        <div class="tracker-point" data-section="base" style="bottom: 0%">
+          <div class="dot"></div>
+          <div class="label">SPAWN·LV 01</div>
+        </div>
+        <div class="tracker-point" data-section="stack" style="bottom: 33%">
+          <div class="dot"></div>
+          <div class="label">LOADOUT·LV 01</div>
+        </div>
+        <div class="tracker-point" data-section="work" style="bottom: 66%">
+          <div class="dot"></div>
+          <div class="label">BOSS FIGHT·LV 01</div>
+        </div>
+        <div class="tracker-point" data-section="summit" style="bottom: 100%">
+          <div class="dot"></div>
+          <div class="label">CONTINUE?·LV 01</div>
+        </div>
+      </div>
+    </div>
+
+    <header>
+      <div class="logo">SUJAK</div>
+      <nav>
+        <a href="#stack"><span>01 —</span>LOADOUT</a>
+        <a href="#work"><span>02 —</span> Work</a>
+        <a href="#summit"><span>03 —</span> Contact</a>
+      </nav>
+    </header>
+
+    <section class="hero" id="hero">
+      <svg class="contour-bg" viewBox="0 0 1200 800" preserveAspectRatio="none">
+        <path
+          id="c1"
+          d="M-50,600 C200,520 350,650 600,560 C850,470 950,600 1250,540"
+        />
+        <path
+          id="c2"
+          d="M-50,680 C250,600 400,720 650,640 C900,560 1000,690 1250,620"
+        />
+        <path
+          id="c3"
+          d="M-50,520 C220,450 380,560 620,480 C880,400 970,510 1250,460"
+        />
+      </svg>
+      <div class="glow" id="heroGlow"></div>
+
+      <div class="eyebrow">HUB · KATHMANDU, NEPAL — 27.71°N</div>
+      <h1>
+        <span class="line"><span>Interfaces,</span></span>
+        <span class="line"
+          ><span>built at <span class="accent">CAVE</span></span></span
+        >
+        <span class="line"><span>Shipped worldwide.</span></span>
+      </h1>
+      <p class="sub">
+        I'm <strong style="color: var(--text)">SUJAK</strong>, a front-end
+        web developer working out of Kathmandu, on a stack that runs from
+        FastAPI on the backend to React, Next.js and Tailwind up front. I build
+        clean, animated, fast interfaces, and I bring in AI only where it
+        actually earns its place.
+      </p>
+      <div class="cta-row">
+        <a href="#work" class="btn btn-primary">See the work</a>
+        <a href="#summit" class="btn btn-ghost">Start a project</a>
+      </div>
+
+      <div class="scroll-cue">
+        <div class="stem"></div>
+        SCROLL
+      </div>
+    </section>
+
+    <section id="stack">
+      <div class="eyebrow reveal"> SPWAN · THE KIT</div>
+      <h2
+        class="reveal"
+        style="font-size: clamp(28px, 4vw, 44px); max-width: 20ch"
+      >
+        EQUIPPED
+      </h2>
+      <div class="tier-grid stagger">
+        <div class="tier core reveal">
+          <div class="tier-label">Core</div>
+          <h3>Reached for daily</h3>
+          <ul>
+            <li>React</li>
+            <li>JavaScript</li>
+            <li>Tailwind CSS</li>
+            <li>Python</li>
+          </ul>
+        </div>
+        <div class="tier comfortable reveal">
+          <div class="tier-label">Comfortable</div>
+          <h3>Solid, growing fast</h3>
+          <ul>
+            <li>Next.js</li>
+            <li>FastAPI</li>
+            <li>Git &amp; GitHub</li>
+            <li>Scroll / motion animation</li>
+          </ul>
+        </div>
+        <div class="tier exploring reveal">
+          <div class="tier-label">Exploring</div>
+          <h3>The next camp up</h3>
+          <ul>
+            <li>TypeScript</li>
+            <li>AI-integrated features</li>
+            <li>Figma / UI design</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="work">
+      <div class="eyebrow reveal">BOSS FIGHT LV 03</div>
+      <h2
+        class="reveal"
+        style="font-size: clamp(28px, 4vw, 44px); max-width: 20ch"
+      >
+        Selected ascents
+      </h2>
+
+      <div class="work-grid stagger">
+        <div class="card reveal" data-tilt>
+          <div class="card-art art-thailand">
+            <div class="card-chrome"><i></i><i></i><i></i></div>
+            <span class="site-url">sujakgg.com</span>
+          </div>
+          <div class="card-body">
+            <h3>Sujakgg — Thailand Journal</h3>
+            <p>
+              A light-themed travel-journal site built around a Thailand route —
+              clean typography, warm palette, and a layout meant to feel like
+              flipping through a trip.
+            </p>
+            <div class="tags">
+              <span class="tag">Light theme</span
+              ><span class="tag">Travel journal</span
+              ><span class="tag">Responsive</span>
+            </div>
+            <a
+              class="card-link"
+              href="https://sujakgg.com"
+              target="_blank"
+              rel="noopener"
+            >
+              Visit live site
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M7 17L17 7M17 7H8M17 7V16" />
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="card reveal" data-tilt>
+          <div class="card-art art-southasia">
+            <div class="card-chrome"><i></i><i></i><i></i></div>
+            <span class="site-url">praslo.com</span>
+          </div>
+          <div class="card-body">
+            <h3>Praslo — South Asia Journal</h3>
+            <p>
+              Praslo's dark-theme counterpart, covering a South Asia route.
+              Ships with a live weather widget, a currency converter, and a
+              built-in itinerary planner.
+            </p>
+            <div class="tags">
+              <span class="tag">Dark theme</span
+              ><span class="tag">Weather widget</span
+              ><span class="tag">Currency converter</span
+              ><span class="tag">Itinerary planner</span>
+            </div>
+            <a
+              class="card-link"
+              href="https://praslo.com"
+              target="_blank"
+              rel="noopener"
+            >
+              Visit live site
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M7 17L17 7M17 7H8M17 7V16" />
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="card reveal" data-tilt>
+          <div class="card-art art-sneaker">
+            <svg
+              class="wave-pattern"
+              viewBox="0 0 400 200"
+              preserveAspectRatio="none"
+            >
+              <path
+                d="M40,150 Q80,90 150,110 Q220,130 260,80 Q300,40 360,60"
+                stroke="rgba(240,168,104,.5)"
+                stroke-width="3"
+                fill="none"
+              />
+            </svg>
+            <div class="card-chrome"><i></i><i></i><i></i></div>
+            <span class="site-url">practice build</span>
+          </div>
+          <div class="card-body">
+            <h3>Product Landing Page</h3>
+            <p>
+              A sneaker-brand-style landing page built as a practice project —
+              scroll-triggered product reveals, parallax hero shot, and a
+              checkout-style CTA flow.
+            </p>
+            <div class="tags">
+              <span class="tag">Scroll animation</span
+              ><span class="tag">Product showcase</span
+              ><span class="tag">Practice build</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card reveal" data-tilt>
+          <div class="card-art art-experiments">
+            <div class="card-chrome"><i></i><i></i><i></i></div>
+            <span class="site-url">4 experiments</span>
+          </div>
+          <div class="card-body">
+            <h3>Landing Page Experiments</h3>
+            <p>
+              A set of four landing pages built to drill one thing each —
+              scroll-triggered reveals, staggered timing, and easing that
+              doesn't feel robotic.
+            </p>
+            <div class="tags">
+              <span class="tag">HTML/CSS/JS</span
+              ><span class="tag">Scroll-trigger</span
+              ><span class="tag">Set of 4</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="summit" class="contact">
+      <div class="eyebrow reveal">SUMMIT · 8,849M</div>
+      <h2 class="reveal">Let's build something worth the climb.</h2>
+      <p class="sub reveal">
+        Open to freelance web projects — landing pages,front-end builds, or
+        interfaces that need real motion design. Based in Kathmandu, working
+        with clients anywhere.
+      </p>
+
+      <div class="contact-links reveal">
+        <a href="mailto:grgsujak83@gmail.com">Email <span class="tag2">grgsujak83@gmail.com</span></a>
+        <a href="https://www.fiverr.com/[FIVERR]" target="_blank" rel="noopener"
+          >Fiverr <span class="tag2">HIRE ME →</span></a
+        >
+        <a href="https://github.com/[GITHUB]" target="_blank" rel="noopener"
+          >GitHub <span class="tag2">CODE →</span></a
+        >
+        <a
+          href="https://linkedin.com/in/[LINKEDIN]"
+          target="_blank"
+          rel="noopener"
+          >LinkedIn <span class="tag2">CONNECT →</span></a
+        >
+      </div>
+    </section>
+
+    <footer>
+      <span>© <span id="year"></span> [NAME] — Kathmandu, Nepal</span>
+      <span>Built with HTML, CSS &amp; JS</span>
+    </footer>
+
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+
+      const reduced = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+
+      /* hero load-in */
+      requestAnimationFrame(() =>
+        document.getElementById("hero").classList.add("loaded"),
+      );
+
+      /* contour parallax drift */
+      if (!reduced) {
+        let t = 0;
+        function drift() {
+          t += 0.002;
+          document.getElementById("c1").style.transform =
+            `translateY(${Math.sin(t) * 6}px)`;
+          document.getElementById("c2").style.transform =
+            `translateY(${Math.sin(t + 1) * 8}px)`;
+          document.getElementById("c3").style.transform =
+            `translateY(${Math.sin(t + 2) * 5}px)`;
+          requestAnimationFrame(drift);
+        }
+        drift();
+
+        window.addEventListener("mousemove", (e) => {
+          const glow = document.getElementById("heroGlow");
+          glow.style.transform = `translate(${e.clientX - 260}px, ${e.clientY - 260}px)`;
+        });
+      }
+
+      /* scroll reveal */
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((en) => {
+            if (en.isIntersecting) en.target.classList.add("in-view");
+          });
+        },
+        { threshold: 0.15 },
+      );
+      document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+
+      /* ascent tracker + top progress */
+      const trackerFill = document.getElementById("trackerFill");
+      const topFill = document.getElementById("topFill");
+      const points = document.querySelectorAll(".tracker-point");
+      const sectionEls = {
+        base: document.getElementById("hero"),
+        stack: document.getElementById("stack"),
+        work: document.getElementById("work"),
+        summit: document.getElementById("summit"),
+      };
+
+      function onScroll() {
+        const scrollable = document.body.scrollHeight - window.innerHeight;
+        const pct = Math.min(1, Math.max(0, window.scrollY / scrollable));
+        if (trackerFill) trackerFill.style.height = pct * 100 + "%";
+        if (topFill) topFill.style.width = pct * 100 + "%";
+
+        let current = "base";
+        Object.entries(sectionEls).forEach(([key, el]) => {
+          const r = el.getBoundingClientRect();
+          if (r.top < window.innerHeight * 0.5) current = key;
+        });
+        points.forEach((p) =>
+          p.classList.toggle("active", p.dataset.section === current),
+        );
+      }
+      window.addEventListener("scroll", onScroll, { passive: true });
+      onScroll();
+
+      /* card tilt */
+      if (!reduced) {
+        document.querySelectorAll("[data-tilt]").forEach((card) => {
+          card.addEventListener("mousemove", (e) => {
+            const r = card.getBoundingClientRect();
+            const x = (e.clientX - r.left) / r.width - 0.5;
+            const y = (e.clientY - r.top) / r.height - 0.5;
+            card.style.transform = `perspective(700px) rotateY(${x * 6}deg) rotateX(${-y * 6}deg) translateY(-4px)`;
+          });
+          card.addEventListener("mouseleave", () => {
+            card.style.transform = "";
+          });
+        });
+
+        /* magnetic buttons */
+        document.querySelectorAll(".btn").forEach((btn) => {
+          btn.addEventListener("mousemove", (e) => {
+            const r = btn.getBoundingClientRect();
+            const x = (e.clientX - r.left - r.width / 2) * 0.25;
+            const y = (e.clientY - r.top - r.height / 2) * 0.25;
+            btn.style.transform = `translate(${x}px, ${y}px)`;
+          });
+          btn.addEventListener("mouseleave", () => {
+            btn.style.transform = "";
+          });
+        });
+      }
+    </script>
+  </body>
+</html>
